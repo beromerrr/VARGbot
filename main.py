@@ -3,6 +3,7 @@ import random
 from flask import Flask, request
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
+import asyncio
 
 TOKEN = os.environ.get("BOT_TOKEN")
 APP_URL = os.environ.get("APP_URL")
@@ -15,11 +16,9 @@ videos = [
     "videos/ВАРГ4.mp4"
 ]
 
-# Flask-приложение
 app = Flask(__name__)
 telegram_app = ApplicationBuilder().token(TOKEN).build()
 
-# Хендлер сообщений
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message and 'варг' in update.message.text.lower():
         video_path = random.choice(videos)
@@ -32,25 +31,17 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-# Webhook endpoint (добавляем GET И POST!)
-@app.route(f"/{TOKEN}", methods=["GET", "POST"])
+@app.route(f'/{TOKEN}', methods=['POST'])
 def webhook():
-    if request.method == "POST":
-        update = telegram_app.bot._extract_update(request.get_json(force=True))
-        telegram_app.create_task(telegram_app.process_update(update))
-    return "ok"
+    update = Update.de_json(request.get_json(force=True), telegram_app.bot)
+    asyncio.run(telegram_app.process_update(update))
+    return 'ok'
 
-# Главная страница
-@app.route("/", methods=["GET"])
-def root():
-    return "Bot is alive!"
+@app.route('/')
+def index():
+    return 'Bot is alive!'
 
-# Запуск Telegram webhook
-if __name__ == "__main__":
-    telegram_app.run_webhook(
-    listen="0.0.0.0",
-    port=PORT,
-    webhook_url=f"{APP_URL}/{TOKEN}",
-    webhook_path=f"/{TOKEN}",   # очень важно указать путь вебхука
-    allowed_updates=None        # (можно не указывать, опционально)
-)
+if __name__ == '__main__':
+    # Перед запуском нужно зарегистрировать webhook через API Telegram:
+    # https://api.telegram.org/bot<token>/setWebhook?url=<APP_URL>/<TOKEN>
+    app.run(host='0.0.0.0', port=PORT)

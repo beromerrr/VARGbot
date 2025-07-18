@@ -3,9 +3,11 @@ import random
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
 
+# Токен бота и URL для вебхука (без слеша в конце)
 TOKEN = os.environ.get("BOT_TOKEN")
-APP_URL = os.environ.get("APP_URL")
+APP_URL = os.environ.get("APP_URL")  # например, https://vargbot.onrender.com
 
+# Список путей к видеофайлам
 videos = [
     "videos/ВАРГ.mp4",
     "videos/ВАРГ2.mp4",
@@ -13,6 +15,7 @@ videos = [
     "videos/ВАРГ4.mp4"
 ]
 
+# Обработчик сообщений
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message and 'варг' in update.message.text.lower():
         video_path = random.choice(videos)
@@ -23,12 +26,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 reply_to_message_id=update.message.message_id
             )
 
+# Создаем приложение бота
 app = ApplicationBuilder().token(TOKEN).build()
+
+# Регистрируем обработчик сообщений
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
 if __name__ == '__main__':
     app.run_webhook(
         listen="0.0.0.0",
-        port=int(os.environ.get("PORT", 10000)),
-        webhook_url=f"{APP_URL}/{TOKEN}"
+        port=int(os.environ.get("PORT", 10000)),  # Порт из переменной окружения, если нет — 10000
+        webhook_url=f"{APP_URL}/{TOKEN}"  # Указываем полный URL с токеном
     )

@@ -3,10 +3,10 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
 videos = [
-    "videos/VARG.mp4",
-    "videos/VARG2.mp4",
-    "videos/VARG3.mp4",
-    "videos/VARG4.mp4"
+    "videos/ВАРГ.mp4",
+    "videos/ВАРГ2.mp4",
+    "videos/ВАРГ3.mp4",
+    "videos/ВАРГ4.mp4"
 ]
 
 TRIGGER_WORD = "варг"

@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
 import random
 
-TOKEN = "7936838791:AAGIjstY4TbmIu4SbTsAW_DCSehfXmEolyc"
+TOKEN = "8198057099:AAEhMiejp6XQj0s5NnEiPXoy2HQp3deYM_w"
 
 trigger_word = "Варг"  # слово, на которое бот реагирует
 

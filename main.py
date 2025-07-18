@@ -1,8 +1,8 @@
 import os
 import random
+from flask import Flask, request
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
-from flask import Flask, request
 
 TOKEN = os.environ.get("BOT_TOKEN")
 APP_URL = os.environ.get("APP_URL")
@@ -30,14 +30,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-@app.route(f"/{TOKEN}", methods=["POST", "GET"])
+@app.route(f"/{TOKEN}", methods=["POST"])
 def webhook():
-    if request.method == "POST":
-        update = telegram_app.bot._extract_update(request.get_json(force=True))
-        telegram_app.create_task(telegram_app.process_update(update))
-        return "ok"
-    else:
-        return "This endpoint only accepts POST requests."
+    update = telegram_app.bot._extract_update(request.get_json(force=True))
+    telegram_app.create_task(telegram_app.process_update(update))
+    return "ok"
 
 @app.route("/", methods=["GET"])
 def root():
@@ -49,3 +46,4 @@ if __name__ == "__main__":
         port=PORT,
         webhook_url=f"{APP_URL}/{TOKEN}"
     )
+

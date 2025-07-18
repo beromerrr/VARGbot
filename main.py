@@ -1,21 +1,26 @@
-import random
 from telegram import Update
-from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
+from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
+import random
 
 TOKEN = "7936838791:AAGIjstY4TbmIu4SbTsAW_DCSehfXmEolyc"
 
-trigger_word = "Варг"
+trigger_word = "Варг"  # слово, на которое бот реагирует
 
-video_files = ["videos/video1.mp4", "videos/video2.mp4"]
+video_files = [
+    "videos/ВАРГ1.mp4",
+    "videos/ВАРГ2.mp4",
+    "videos/ВАРГ3.mp4",
+    "videos/ВАРГ4.mp4"
+]
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def send_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.lower()
-    if trigger_word in text:
-        video = random.choice(video_files)
-        await context.bot.send_video(chat_id=update.effective_chat.id, video=open(video, 'rb'))
+    if trigger_word.lower() in text:
+        video_path = random.choice(video_files)
+        await context.bot.send_video(chat_id=update.effective_chat.id, video=open(video_path, "rb"))
 
-app = ApplicationBuilder().token(TOKEN).build()
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
-print("Бот запущен...")
-app.run_polling()
+if __name__ == '__main__':
+    app = ApplicationBuilder().token(TOKEN).build()
+    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), send_video))
+    print("Бот запущен...")
+    app.run_polling()

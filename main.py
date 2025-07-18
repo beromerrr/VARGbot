@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
 videos = [
-    "videos/VARG1.mp4",
+    "videos/VARG.mp4",
     "videos/VARG2.mp4",
     "videos/VARG3.mp4",
     "videos/VARG4.mp4"

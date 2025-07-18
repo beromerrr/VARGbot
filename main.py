@@ -13,7 +13,7 @@ videos = [
 ]
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.message and 'варг' in update.message.text.lower():
+    if update.message and update.message.text and 'варг' in update.message.text.lower():
         video_path = random.choice(videos)
         with open(video_path, 'rb') as video_file:
             await context.bot.send_video(

@@ -1,5 +1,7 @@
 import os
 import random
+import threading
+from flask import Flask
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
 
@@ -12,6 +14,7 @@ videos = [
     "videos/ВАРГ4.mp4"
 ]
 
+# Телеграм бот
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message and update.message.text and 'варг' in update.message.text.lower():
         video_path = random.choice(videos)
@@ -22,8 +25,19 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 reply_to_message_id=update.message.message_id
             )
 
-if __name__ == '__main__':
+def run_bot():
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     print("Бот запущен...")
     app.run_polling()
+
+# Flask сервер для UptimeRobot
+flask_app = Flask(__name__)
+
+@flask_app.route('/')
+def home():
+    return "Bot is alive!", 200
+
+if __name__ == '__main__':
+    threading.Thread(target=run_bot).start()
+    flask_app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))

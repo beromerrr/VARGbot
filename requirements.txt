@@ -1,2 +1,2 @@
-flask
-python-telegram-bot[webhooks]
+python-telegram-bot[webhook]
+flask==2.3.3

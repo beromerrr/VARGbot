@@ -1,4 +1,12 @@
 import os
+
+print("Текущая рабочая директория:", os.getcwd())
+print("Содержимое текущей папки:", os.listdir())
+try:
+    print("Содержимое папки videos:", os.listdir('videos'))
+except Exception as e:
+    print("Ошибка при чтении папки videos:", e)
+
 from flask import Flask, request
 
 app = Flask(__name__)

@@ -30,11 +30,14 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-@app.route(f"/{TOKEN}", methods=["POST"])
+@app.route(f"/{TOKEN}", methods=["POST", "GET"])
 def webhook():
-    update = telegram_app.bot._extract_update(request.get_json(force=True))
-    telegram_app.create_task(telegram_app.process_update(update))
-    return "ok"
+    if request.method == "POST":
+        update = telegram_app.bot._extract_update(request.get_json(force=True))
+        telegram_app.create_task(telegram_app.process_update(update))
+        return "ok"
+    else:
+        return "This endpoint only accepts POST requests."
 
 @app.route("/", methods=["GET"])
 def root():

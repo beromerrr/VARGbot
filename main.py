@@ -48,7 +48,9 @@ def root():
 # Запуск Telegram webhook
 if __name__ == "__main__":
     telegram_app.run_webhook(
-        listen="0.0.0.0",
-        port=PORT,
-        webhook_url=f"{APP_URL}/{TOKEN}"
-    )
+    listen="0.0.0.0",
+    port=PORT,
+    webhook_url=f"{APP_URL}/{TOKEN}",
+    webhook_path=f"/{TOKEN}",   # очень важно указать путь вебхука
+    allowed_updates=None        # (можно не указывать, опционально)
+)

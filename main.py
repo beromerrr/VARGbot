@@ -8,6 +8,10 @@ from flask import Flask, request
 TOKEN = os.environ.get("BOT_TOKEN")
 APP_URL = os.environ.get("APP_URL")
 
+# Выводим токен и URL для проверки (удали после отладки)
+print("TOKEN:", TOKEN)
+print("APP_URL:", APP_URL)
+
 # Список видео (пути к файлам)
 videos = [
     "videos/ВАРГ.mp4",

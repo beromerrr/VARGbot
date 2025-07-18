@@ -1,26 +1,36 @@
-from telegram import Update
-from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
 import random
+from telegram.ext import Updater, MessageHandler, Filters
 
-TOKEN = "8198057099:AAEhMiejp6XQj0s5NnEiPXoy2HQp3deYM_w"
-
-trigger_word = "Варг"  # слово, на которое бот реагирует
-
-video_files = [
-    "videos/ВАРГ1.mp4",
-    "videos/ВАРГ2.mp4",
-    "videos/ВАРГ3.mp4",
-    "videos/ВАРГ4.mp4"
+videos = [
+    "videos/VARG1.mp4",
+    "videos/VARG2.mp4",
+    "videos/VARG3.mp4",
+    "videos/VARG4.mp4"
 ]
 
-async def send_video(update: Update, context: ContextTypes.DEFAULT_TYPE):
+TRIGGER_WORD = "Варг"
+
+def handle_message(update, context):
     text = update.message.text.lower()
-    if trigger_word.lower() in text:
-        video_path = random.choice(video_files)
-        await context.bot.send_video(chat_id=update.effective_chat.id, video=open(video_path, "rb"))
+    if TRIGGER_WORD in text:
+        video_path = random.choice(videos)
+        with open(video_path, 'rb') as video_file:
+            context.bot.send_video(
+                chat_id=update.effective_chat.id,
+                video=video_file,
+                reply_to_message_id=update.message.message_id
+            )
+
+def main():
+    TOKEN = "8198057099:AAEhMiejp6XQj0s5NnEiPXoy2HQp3deYM_w"
+    updater = Updater(TOKEN)
+    dispatcher = updater.dispatcher
+
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
+
+    print("Бот запущен")
+    updater.start_polling()
+    updater.idle()
 
 if __name__ == '__main__':
-    app = ApplicationBuilder().token(TOKEN).build()
-    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), send_video))
-    print("Бот запущен...")
-    app.run_polling()
+    main()

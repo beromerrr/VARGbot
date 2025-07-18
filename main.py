@@ -5,8 +5,8 @@ from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filte
 from flask import Flask, request
 
 # Получаем токен и адрес сайта из переменных окружения
-TOKEN = os.environ.get("8198057099:AAEhMiejp6XQj0s5NnEiPXoy2HQp3deYM_w")
-APP_URL = os.environ.get("https://vargbot.onrender.com")
+TOKEN = os.environ.get("BOT_TOKEN")
+APP_URL = os.environ.get("APP_URL")
 
 # Список видео (пути к файлам)
 videos = [
